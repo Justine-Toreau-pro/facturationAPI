@@ -91,9 +91,9 @@ class Utilisateur {
     public function generateToken()
     {
         // On crée une chaine introuvable
-        $token = md5(time() . uniqid(true) . mt_rand(1, 1000));
+        //$token = md5(time() . uniqid(true) . mt_rand(1, 1000));
         // Plus secure ? => bin2hex(random_bytes(32));
-
+        $token = bin2hex(random_bytes(32));
         // On le stocke en session
         $_SESSION['token'] = $token;
 

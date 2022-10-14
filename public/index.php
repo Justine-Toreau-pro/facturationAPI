@@ -1424,6 +1424,16 @@ $router->map(
 );
 
 $router->map(
+    'POST',
+    '/api/utilisateur/logout', //url ou endpoint 
+    [
+        'controller' => '\App\Controllers\UtilisateurController',
+        'method' => 'logout',
+    ],
+    'utilisateur-logout'
+);
+
+$router->map(
     'GET',
     '/api/utilisateur', //url ou endpoint 
     [

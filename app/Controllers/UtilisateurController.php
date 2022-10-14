@@ -208,9 +208,23 @@ class UtilisateurController //extends CoreController
         // => cela permettra d'accéder, aux infos du User (email, role, etc.)
         // sans faire de requête à la base
         //$_SESSION['userObject'] = $user;
-
+        $_SESSION['entreprise'] = $user->getEntreprise();
         print_r($token);
         echo "conecté en tant que" . " " . $user->getEntreprise();
+        // On redirige vers la home
+        //header('Location: /');
+        exit;
+    }
+
+
+    public function logout()
+    {
+        // On indéfinit les clés de la session
+        // qui correspondent à la connexion utilisateur
+        // https://www.php.net/manual/fr/function.unset.php
+        session_destroy();
+        
+
         // On redirige vers la home
         //header('Location: /');
         exit;

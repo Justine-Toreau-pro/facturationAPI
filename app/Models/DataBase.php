@@ -18,8 +18,10 @@ class DataBase extends CoreModel{
                     
                     $sql = "CREATE DATABASE `{$database}`";
 
-                    $sql2 = "CREATE USER `{$username}`@'localhost' IDENTIFIED BY '{$password}' GRANT 	[Create routine] ON `{$database}` TO `{$username}`@'localhost'";
-                   
+                    $sql2 = "CREATE USER `{$username}`@'localhost' IDENTIFIED BY '{$password}'"; 
+
+                    $sql21 = "GRANT ALL PRIVILEGES ON `{$database}` . * TO `{$username}`@'localhost'";
+              
                     $sql3 = "CREATE TABLE IF NOT EXISTS `{$database}`.`fournisseur` (
                         `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
                         `firstname` VARCHAR(64) NULL,
@@ -34,6 +36,7 @@ class DataBase extends CoreModel{
                       
                     $dbco->exec($sql);
                     $dbco->exec($sql2);
+                    $dbco->exec($sql21);
                     $dbco->exec($sql3);
                     echo 'Base de données créée bien créée !';
                 }

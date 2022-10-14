@@ -34,9 +34,10 @@ class Database
     {   
         //RECUPERER LES INFORMATIONS STOCKEES EN $_SESSION
         $dbHost = 'localhost';
-        $dbName = 'microgestion';
-        $dbUserName = 'microgestion';
-        $dbPassword = 'Microgestion.29';
+        $dbName = $_SESSION['entreprise'];//'microgestion';
+        //var_dump($dbName);
+        $dbUserName = 'root';
+        $dbPassword = 'Bigbang.29';
         // Récupération des données du fichier de config
         // la fonction parse_ini_file parse le fichier et retourne un array associatif
         $configData = parse_ini_file(__DIR__ . '/../config.ini');
