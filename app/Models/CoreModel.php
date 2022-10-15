@@ -12,7 +12,7 @@
 namespace App\Models;
 
 use PDO;
-use App\Utils\Database;
+use App\Utils\Database2;
 use App\Models\Fournisseur;
 
 // Classe mère de tous les Models
@@ -56,7 +56,7 @@ class CoreModel{
     {
         CoreModel::cors();
 
-        $pdo = Database::getPDO2();
+        $pdo = Database2::getPDO2();
         $sql = "SELECT * FROM `{$table}`";
         $pdoStatement = $pdo->query($sql);
         $response = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
@@ -69,7 +69,7 @@ class CoreModel{
     {
         CoreModel::cors();
 
-        $pdo = Database::getPDO2();
+        $pdo = Database2::getPDO2();
         $sql = "SELECT * FROM `{$table1}`, `{$table2}`
         WHERE `{$table1}`.`{$column1}` = `{$table2}`.`{$column2}` "
         ;
@@ -84,7 +84,7 @@ class CoreModel{
     {
         CoreModel::cors();
 
-        $pdo = Database::getPDO2();
+        $pdo = Database2::getPDO2();
         $sql = "SELECT * FROM `{$table1}`, `{$table2}`, `{$table3}`
         WHERE `{$table4}`.`{$column1}` = `{$table5}`.`{$column2}`
         AND  `{$table6}`.`{$column3}` = `{$table7}`.`{$column4}` "
@@ -100,7 +100,7 @@ class CoreModel{
     {
         CoreModel::cors();
 
-        $pdo = Database::getPDO2();
+        $pdo = Database2::getPDO2();
         $sql = "SELECT * FROM `{$table1}`, `{$table2}`, `{$table3}`, `{$table4}`
         WHERE `{$table5}`.`{$column1}` = `{$table6}`.`{$column2}`
         AND  `{$table7}`.`{$column3}` = `{$table8}`.`{$column4}`
@@ -117,7 +117,7 @@ class CoreModel{
     {
         CoreModel::cors();
 
-        $pdo = Database::getPDO2();
+        $pdo = Database2::getPDO2();
         $sql = "SELECT * FROM `{$table}` WHERE `{$column}` =" . $idColumnSelect;
         $pdoStatement = $pdo->query($sql);
         $response = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
@@ -130,7 +130,7 @@ class CoreModel{
     {
         CoreModel::cors();
 
-        $pdo = Database::getPDO2();
+        $pdo = Database2::getPDO2();
         $sql = 
         "SELECT * FROM `{$table1}`, `{$table2}` 
         WHERE  `{$table3}`.`{$column1}` = `{$table4}`.`{$column2}` 
@@ -147,7 +147,7 @@ class CoreModel{
     {
         CoreModel::cors();
 
-        $pdo = Database::getPDO2();
+        $pdo = Database2::getPDO2();
         $sql = 
         "SELECT * FROM `{$table1}`, `{$table2}` , `{$table3}`
         WHERE  `{$table4}`.`{$column1}` = `{$table5}`.`{$column2}` 
@@ -166,7 +166,7 @@ class CoreModel{
 
         
          // Récupération de l'objet PDO représentant la connexion à la DB
-       $pdo = Database::getPDO2();
+       $pdo = Database2::getPDO2();
        $sql0 =   "
        INSERT INTO `{$table}` (`{$column}`)
        VALUES ('{$id}')
@@ -220,7 +220,7 @@ class CoreModel{
 
     public function update($table, $tableau, $id)
     {
-        $pdo = Database::getPDO2();
+        $pdo = Database2::getPDO2();
 
         foreach($tableau as $column1 => $this->value) :
       
@@ -248,11 +248,28 @@ class CoreModel{
         
         CoreModel::cors();
 
-        $pdo = Database::getPDO2();
+        $pdo = Database2::getPDO2();
         $sql = "DELETE FROM `{$table}` WHERE `{$column}` =" . $idColumnSelect;
         $pdo->exec($sql);
         return;
 
+    }
+
+
+    public static function decryptage($password)
+    {
+        
+        $c = base64_decode($password);
+        $ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+        $iv = substr($c, 0, $ivlen);
+        $hmac = substr($c, $ivlen, $sha2len=32);
+        $ciphertext_raw = substr($c, $ivlen+$sha2len);
+        $original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+            if (hash_equals($hmac, $calcmac))// timing attack safe comparison
+            {
+                return $original_plaintext;
+            }
     }
 
 

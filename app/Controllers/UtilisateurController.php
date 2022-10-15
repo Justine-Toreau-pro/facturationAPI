@@ -159,7 +159,7 @@ class UtilisateurController //extends CoreController
         //print_r($password);
         // On va chercher l'utilisateur demandé
         $user = Utilisateur::find("Utilisateur", "identifiant", $identifiant);
-
+        
         //print_r($user);
         //print_r(json_decode($user));
         //$user = json_decode($user);
@@ -198,18 +198,15 @@ class UtilisateurController //extends CoreController
 
         // Sécurité supplémentaire : passer le mot de passe à null (plus secure)
         // avant de stocker le user session
-        $user->setPassword('');
+        //$user->setPassword('');
         $core = new Utilisateur;
         $token = $core->generateToken();
-        //print_r($_SESSION);
-        // Son identifiant
-        //$_SESSION['userId'] = $user->getId();
-        // L'objet complet ($user)
-        // => cela permettra d'accéder, aux infos du User (email, role, etc.)
-        // sans faire de requête à la base
-        //$_SESSION['userObject'] = $user;
         $_SESSION['entreprise'] = $user->getEntreprise();
-        print_r($token);
+        $_SESSION['identifiant'] = $user->getIdentifiant();
+        $_SESSION['password'] = $core->cryptage($data["password"]);
+        
+        var_dump($_SESSION);
+        
         echo "conecté en tant que" . " " . $user->getEntreprise();
         // On redirige vers la home
         //header('Location: /');
@@ -219,9 +216,7 @@ class UtilisateurController //extends CoreController
 
     public function logout()
     {
-        // On indéfinit les clés de la session
-        // qui correspondent à la connexion utilisateur
-        // https://www.php.net/manual/fr/function.unset.php
+        
         session_destroy();
         
 
