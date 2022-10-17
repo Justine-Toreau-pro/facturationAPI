@@ -1,4 +1,4 @@
-# Dictionnaire de données
+# Dictionnaire de données Base 1
 
 
 ## Table 1 : Fournisseur
@@ -292,12 +292,24 @@
 | Champ| Type | Spécificités | Description 
 |--|--|--|--|
 |`id` |INT(8)| PRIMARY KEY, NOT NULL, AUTO_INCREMENT|--|
-|`id` |INT(8)| PRIMARY KEY, NOT NULL, AUTO_INCREMENT|--|
 |`id_facture`|INT(8)|SECONDARY KEY, NOT NULL|--|
 |`id_article`|INT(8)|SECONDARY KEY, NOT NULL|--|
 |`quantity`|INT(8)|NOT NULL|--|
 |`created_at`|TIMESTAMP|NOT NULL, DEFAULT CURRENT_TIMESTAMP|--|
 |`updated_at`|TIMESTAMP|NOT NULL|--|
+
+## Table 23 : Fournisseur
+
+| Champ| Type | Spécificités | Description
+|--|--|--|--|
+|`id` |INT(8)| PRIMARY KEY, NOT NULL, AUTO_INCREMENT|--|
+|`identifiant`|--|--|--|
+|`password`|--|--|--|
+|`entreprise`|--|--|--|
+|--|--|--|--|
+|--|--|--|--|
+|`created_at`|--|--|--|
+|`updated_at`|--|--|--|
 
 
 ## Table 23 : Parametre
@@ -317,3 +329,34 @@
 |`numero_client_bdc`|--|--|--|
 |`numero_client_bdl`|--|--|--|
 |`numero_client_facture`|--|--|--|
+
+# Dictionnaire de données Base 2
+
+
+## Table 21 : Utilisateur
+
+| Champ| Type | Spécificités | Description
+|--|--|--|--|
+|`id` |INT(8)| PRIMARY KEY, NOT NULL, AUTO_INCREMENT|--|
+|`identifiant`|UNIQUE, NOT NULL|--|adresse mail|
+|`password`|--|--|--|
+|`entreprise`|VARCHAR(64)|DEFAULT NULL|--|
+|`type_de_societe`|VARCHAR(32)|DEFAULT NULL|--|
+|`raison_sociale`|VARCHAR(64)|NOT NULL|--|
+|`adresse_numero`|INT(16)|UNSIGNED, DEFAULT NULL|--|
+|`adresse_bis_ter`|VARCHAR(8)|DEFAULT NULL|--|
+|`adresse_type_de_voie`|VARCHAR(64)|DEFAULT NULL|--|
+|`adresse_nom_de_la_voie`|VARCHAR(128)|DEFAULT NULL|--|
+|`adresse_cp`|INT(8)|UNSIGNED, DEFAULT NULL|--|
+|`adresse_ville`|VARCHAR(64)|DEFAULT NULL|--|
+|`adresse_pays`|VARCHAR(64)|DEFAULT NULL|--|
+|`telephone`|INT(16)|UNSIGNED, DEFAULT NULL|--|
+|`mail`|VARCHAR(128)|DEFAULT NULL|--|
+|`site_web`|VARCHAR(128)|DEFAULT NULL|--|
+|`numero_siret`|INT(16)|UNSIGNED, DEFAULT NULL|--|
+|`numero_siren`|INT(16)|UNSIGNED, DEFAULT NULL|--|
+|`numero_tva`|VARCHAR(32)|DEFAULT NULL|--|
+|`role`|ENUM(+)|NOT NULL|(+) admin, adminuser, user|
+|`date_de_validite_paiement`|TIMESTAMP|NOT NULL|--|
+|`created_at`|TIMESTAMP|NOT NULL, DEFAULT CURRENT_TIMESTAMP|--|
+|`updated_at`|TIMESTAMP|NOT NULL|--|

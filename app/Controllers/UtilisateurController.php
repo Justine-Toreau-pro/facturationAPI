@@ -20,32 +20,46 @@ class UtilisateurController //extends CoreController
         return print_r($utilisateurList);
     }
 
+
     public function edit($utilisateurId)
     {
         // On récupère l'id transmis par AltoDispatcher
         // comme argument "direct" (plus de tableau)
         $utilisateurEdit = Utilisateur::find("Utilisateur", "id", $utilisateurId);
 
-        print_r($utilisateurEdit);
+        return print_r($utilisateurEdit);
     }
+
 
     //Fonction de création d'un nouvel utilisateur
     public function newUtilisateur()
     {
-        
-
         $jsonData = file_get_contents("php://input");
 
         $data = json_decode($jsonData, true);
         //var_dump($data);
-
-        //print_r($data[identifiant]);
         
-        // On récupère chaque donnée dans une variable
         $id = $data["id"];
         $identifiant = $data["identifiant"];
         $password = $data["password"];
         $entreprise = $data["entreprise"];
+        $type_de_societe = $data["type_de_societe"];
+        $raison_sociale = $data["raison_sociale"];
+        $adresse_numero = $data["adresse_numero"];
+        $adresse_bis_ter = $data["adresse_bis_ter"];
+        $adresse_type_de_voie = $data["adresse_type_de_voie"];
+        $adresse_nom_de_la_voie = $data["adresse_nom_de_la_voie"];
+        $adresse_cp = $data["adresse_cp"];
+        $adresse_ville = $data["adresse_ville"];
+        $adresse_pays = $data["adresse_pays"];
+        $telephone = $data["telephone"];
+        $mail = $data["mail"];
+        $site_web = $data["site_web"];
+        $numero_siret = $data["numero_siret"];
+        $numero_siren = $data["numero_siren"];
+        $numero_tva = $data["numero_tva"];
+        $role = $data["role"];
+        $date_de_validite_paiement = $data["date_de_validite_paiement"];
         $created_at = $data["created_at"];
         $updated_at = $data["updated_at"];
         //var_dump($id, $identifiant, $mot_de_passe);
@@ -105,6 +119,23 @@ class UtilisateurController //extends CoreController
             $utilisateur->setIdentifiant($identifiant);
             $utilisateur->setPassword($hashedPassword);
             $utilisateur->setEntreprise($entreprise);
+            $utilisateur->setTypeDeSociete($type_de_societe);
+            $utilisateur->setRaisonSociale($raison_sociale);
+            $utilisateur->setAdresseNumero($adresse_numero);
+            $utilisateur->setAdresseBisTer($adresse_bis_ter);
+            $utilisateur->setAdresseTypeDeVoie($adresse_type_de_voie);
+            $utilisateur->setAdresseNomDeLaVoie($adresse_nom_de_la_voie);
+            $utilisateur->setAdresseCP($adresse_cp);
+            $utilisateur->setAdresseVille($adresse_ville);
+            $utilisateur->setAdressePays($adresse_pays);
+            $utilisateur->setTelephone($telephone);
+            $utilisateur->setMail($mail);
+            $utilisateur->setSiteWeb($site_web);
+            $utilisateur->setNumeroSiret($numero_siret);
+            $utilisateur->setNumeroSiren($numero_siren);
+            $utilisateur->setNumeroTva($numero_tva);
+            $utilisateur->setRole($role);
+            $utilisateur->setDateDeValiditePaiement($date_de_validite_paiement);
             $utilisateur->setCreatedAt($created_at);
             $utilisateur->setUpdatedAt($updated_at);
 
@@ -124,7 +155,7 @@ class UtilisateurController //extends CoreController
         // Si succès
        if ($success) {
         echo 'sauvegarde ok.';
-        DataBase::newDatabase($identifiant, $password, $entreprise);
+        DataBase::newDatabase($identifiant, $password, $identifiant);
             // Ne pas faire de echo ou de dump avant header() !
 
             // On redirige vers la liste
