@@ -35,13 +35,12 @@ class UtilisateurController //extends CoreController
     public function newUtilisateur()
     {
         $jsonData = file_get_contents("php://input");
-
         $data = json_decode($jsonData, true);
-        //var_dump($data);
         
         $id = $data["id"];
-        $identifiant = $data["identifiant"];
+        $identifiant = $data["identifiant"]; //ADRESSE MAIL
         $password = $data["password"];
+        $password_control = $data["password_control"];
         $entreprise = $data["entreprise"];
         $type_de_societe = $data["type_de_societe"];
         $raison_sociale = $data["raison_sociale"];
@@ -62,52 +61,67 @@ class UtilisateurController //extends CoreController
         $date_de_validite_paiement = $data["date_de_validite_paiement"];
         $created_at = $data["created_at"];
         $updated_at = $data["updated_at"];
-        //var_dump($id, $identifiant, $mot_de_passe);
+        
 
         // Pas d'erreurs
         // On crée un tableau d'erreurs, qui est vide par défaut
         // on le remplira à chaque nouvelle erreur
         $errorsList = [];
 
-        // "name" doit être présent (donc pas null, pas false, pas chaine vide)
-       // if (empty($firstname)) {
+        // "identifiant" doit être présent (donc pas null)
+        if (empty($identifiant) || $identifiant == "") 
+        {
             // On "push" le message dans le tableau
-           // $errorsList[] = 'Le prénom est requis.';
-        //}
-        // et a passé le filtre de nettoyage
-        // l'égalité stricte nous permet de savoir si le filtre a échoué
-        //if ($firstname === false) {
-          //  $errorsList[] = 'Le prénom est invalide.';
-        //}
+           $errorsList[] = "L'adresse mail est requise.";
+        }
 
-        //if (empty($lastname)) {
-          //  $errorsList[] = 'Le nom est requis.';
-        //}
-        //if ($lastname === false) {
-        //    $errorsList[] = 'Le nom est invalide.';
-       // }
+        // "password" doit être présent (donc pas null)
+        if (empty($password)) 
+        {
+            // On "push" le message dans le tableau
+           $errorsList[] = "Le mot de passe est requis.";
+        }
 
-        //if (empty($status)) {
-         //   $errorsList[] = 'Le statut est requis.';
-        //}
-        //if ($status === false) {
-          //  $errorsList[] = 'Le statut est invalide.';
-        //}
+        // "password" doit être présent (donc pas null)
+        if (empty($password_control)) 
+        {
+            // On "push" le message dans le tableau
+           $errorsList[] = "Le mot de passe de vérification est requis.";
+        }
 
+        //password et password_control doivent être identiques
+        if ($password != $password_control) 
+        {
+            // On "push" le message dans le tableau
+           $errorsList[] = "Les mots de passe ne sont pas identiques.";
+        }
 
-        //if (empty($teacher_id)) {
-           // $errorsList[] = 'Le teacher id est requis.';
-        //}
-        //if ($teacher_id === false) {
-            //$errorsList[] = 'Le teacher id est invalide.';
-        //}
+        //password doit être conforme aux règles utilisateur de mysql
+        if (strlen($password) < 8) 
+        {
+            // On "push" le message dans le tableau
+           $errorsList[] = "Le mot de passe fait moins de 8 caractères";
+        }
 
-        
+        if (preg_match('#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)#', $password)) 
+        {
+
+        }
+        else 
+        {
+     
+            $errorsList[] = "Le mot de passe n'est pas conforme. Il doit contenir au moins 8 caractères dont une majuscule, une minuscule, un chiffre et un caractère spécial tel que: . ! & @ §";
+        }
     
 
         // Y'a t-il des erreurs ? Si le tableau n'est pas vide
-        //if (!empty($errorsList)) {
-            // On affiche le formulaire avec les erreurs
+        if (!empty($errorsList)) 
+        {
+            return print_r(json_encode($errorsList));
+        }
+        else
+        {
+            
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             // Pour insérer en DB, ou afficher le formulaire pré-saisi
             // je crée d'abord une nouvelle instance du Model correspondant
@@ -140,35 +154,31 @@ class UtilisateurController //extends CoreController
             $utilisateur->setUpdatedAt($updated_at);
 
             
-            //var_dump($utilisateur);
-            // On quitte le programme sinon on va insérer
-            // la catégorie avec les erreurs (code plus bas)
-           // exit;
-        //}
+                // En dernier, j'appelle la méthode du Model permettant d'ajouter en DB.
+            // $success contient le retour de l'ajout true ou false
+            $success=$utilisateur->insert();
 
-    
+            // Si succès
+        if ($success) {
+            echo 'sauvegarde ok.';
+            DataBase::newDatabase($identifiant, $password, $identifiant);
+                // Ne pas faire de echo ou de dump avant header() !
 
-        // En dernier, j'appelle la méthode du Model permettant d'ajouter en DB.
-        // $success contient le retour de l'ajout true ou false
-        $success=$utilisateur->insert();
-
-        // Si succès
-       if ($success) {
-        echo 'sauvegarde ok.';
-        DataBase::newDatabase($identifiant, $password, $identifiant);
-            // Ne pas faire de echo ou de dump avant header() !
-
-            // On redirige vers la liste
-            // Ajout d'un en-tête de réponse HTTP
-            // qui fera office de redirection (et aura un statut 302)
-         //header('Location: /students');
-            // On stoppe le programme ici pour ne rien éxécuter de superflu
-           // exit;
-       } else {
-            // Sinon
-           echo 'Erreur à la sauvegarde.';
+                // On redirige vers la liste
+                // Ajout d'un en-tête de réponse HTTP
+                // qui fera office de redirection (et aura un statut 302)
+            //header('Location: /students');
+                // On stoppe le programme ici pour ne rien éxécuter de superflu
+            // exit;
+            } else {
+                // Sinon
+            echo 'Erreur à la sauvegarde.';
+            }
+                //var_dump($utilisateur);
+                // On quitte le programme sinon on va insérer
+                // la catégorie avec les erreurs (code plus bas)
+                
         }
-
     }
 
 
@@ -249,8 +259,6 @@ class UtilisateurController //extends CoreController
     {
         
         session_destroy();
-        
-
         // On redirige vers la home
         //header('Location: /');
         exit;
