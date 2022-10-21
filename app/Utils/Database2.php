@@ -3,8 +3,9 @@
 
 namespace App\Utils;
 
-use App\Models\CoreModel;
 use PDO;
+
+use App\Controllers\SecurityController;
 
 // Retenir son utilisation  => Database::getPDO()
 // Design Pattern : Singleton
@@ -38,7 +39,7 @@ class Database2
         $dbHost = 'localhost';
         //$dbName = $_SESSION['entreprise'];
         $dbUserName = $_SESSION['identifiant'];
-        $dbPassword = CoreModel::decryptage($_SESSION['password']);
+        $dbPassword = SecurityController::decryptage($_SESSION['password']);
         
         try{    
             $this->dbh2 = new PDO(

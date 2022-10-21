@@ -7,7 +7,7 @@ use App\Models\CoreModel;
 use App\Models\DataBase;
 
 use App\Controllers\CoreController;
-
+use App\Controllers\SecurityController;
 
 
 class UtilisateurController //extends CoreController
@@ -58,6 +58,7 @@ class UtilisateurController //extends CoreController
         $numero_siren = $data["numero_siren"];
         $numero_tva = $data["numero_tva"];
         $role = $data["role"];
+        $code_mail_validate = SecurityController::codeGenerate();
         $date_de_validite_paiement = $data["date_de_validite_paiement"];
         $created_at = $data["created_at"];
         $updated_at = $data["updated_at"];
@@ -149,6 +150,8 @@ class UtilisateurController //extends CoreController
             $utilisateur->setNumeroSiren($numero_siren);
             $utilisateur->setNumeroTva($numero_tva);
             $utilisateur->setRole($role);
+            $utilisateur->setCodeMailValidate($code_mail_validate);
+            $utilisateur->setMailValidate(0);
             $utilisateur->setDateDeValiditePaiement($date_de_validite_paiement);
             $utilisateur->setCreatedAt($created_at);
             $utilisateur->setUpdatedAt($updated_at);
@@ -162,6 +165,8 @@ class UtilisateurController //extends CoreController
         if ($success) {
             echo 'sauvegarde ok.';
             DataBase::newDatabase($identifiant, $password, $identifiant);
+            $result = SecurityController::mailValidate($identifiant);
+            var_dump($result);
                 // Ne pas faire de echo ou de dump avant header() !
 
                 // On redirige vers la liste
@@ -182,6 +187,24 @@ class UtilisateurController //extends CoreController
     }
 
 
+    public function modifUtilisateur()
+    {
+        echo "par ici";
+    }
+
+
+    public function suppUtilisateur()
+    {
+        echo "supp ulilisateur";
+    }
+
+
+    public function corsoption()
+    {
+        CoreModel::cors();
+    }
+
+
     //Fonction de connexion
     public function connexionUtilisateur()
     {
@@ -190,43 +213,24 @@ class UtilisateurController //extends CoreController
         $data = json_decode($jsonData, true);
         
         //On les stock dans des variables
-    
         $identifiant = $data["identifiant"];
         $password = $data["password"];
-        //$password = password_hash($data["password"], PASSWORD_DEFAULT);
-        //$entreprise = $data["entreprise"];
         
-        //print_r($identifiant);
-        //print_r($password);
-        // On va chercher l'utilisateur demandé
         $user = Utilisateur::find("Utilisateur", "identifiant", $identifiant);
         
-        //print_r($user);
-        //print_r(json_decode($user));
-        //$user = json_decode($user);
-        //$user = json_decode($user);
-        //$user=json_decode($user);
-        
-        // Le user existe-t-il ?
-        //print_r($user);
-        
-        if ($user === false) {
+        if ($user === false) 
+        {
             // On sait que c'est juste l'email qui est inconnu
             // mais on ne le dit pas (on donne le moins d'infos possible)
 
-            // @todo : réafficher le form avec des erreurs en HTML
             echo 'Utilisateur ou mot de passe incorrect. (debug: email)';
             
             // return permet de sortir de la méthode sans exécuter la suite du code
             return;
         }
         
-        // Le mot de passe est-il correct ?
-        // Si le mot de passe fourni via $_POST ne correspond pas au mot de passe du User en BDD
-        // c'est que le couple email/password est incorrect
-        // On utilise la fonction native de PHP password_verify()
-        // https://www.php.net/manual/en/function.password-verify
-        if (password_verify($password, $user->getPassword()) === false) {
+        if (password_verify($password, $user->getPassword()) === false) 
+        {
             // @todo : réafficher le form avec des erreurs en HTML
             echo 'Utilisateur ou mot de passe incorrect. (debug: password)';
 
@@ -234,17 +238,10 @@ class UtilisateurController //extends CoreController
             return;
         }
 
-        // Si tout est correct, on faut ce qu'on a à faire
-        // On renseigne des infos en session, pour identifier l'utilisateur
-
-        // Sécurité supplémentaire : passer le mot de passe à null (plus secure)
-        // avant de stocker le user session
-        //$user->setPassword('');
-        $core = new Utilisateur;
-        $token = $core->generateToken();
+        SecurityController::generateToken();
         $_SESSION['entreprise'] = $user->getEntreprise();
         $_SESSION['identifiant'] = $user->getIdentifiant();
-        $_SESSION['password'] = $core->cryptage($data["password"]);
+        $_SESSION['password'] = SecurityController::cryptage($data["password"]);
         
         var_dump($_SESSION);
         
@@ -257,7 +254,6 @@ class UtilisateurController //extends CoreController
 
     public function logout()
     {
-        
         session_destroy();
         // On redirige vers la home
         //header('Location: /');

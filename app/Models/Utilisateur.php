@@ -30,6 +30,8 @@ class Utilisateur
     private $numero_siren;
     private $numero_tva;
     private $role;
+    private $code_mail_validate;
+    private $mail_validate;
     private $date_de_validite_paiement;
     private $created_at;
     private $updated_at;
@@ -65,10 +67,10 @@ class Utilisateur
 
        $sql = "
            INSERT INTO 
-           `Utilisateur` (id, identifiant, password, entreprise,type_de_societe, raison_sociale, adresse_numero, adresse_bis_ter, adresse_type_de_voie, adresse_nom_de_la_voie, adresse_cp, adresse_ville, adresse_pays, telephone, mail, site_web, numero_siret, numero_siren, numero_tva, role, date_de_validite_paiement, created_at, updated_at)
+           `Utilisateur` (id, identifiant, password, entreprise,type_de_societe, raison_sociale, adresse_numero, adresse_bis_ter, adresse_type_de_voie, adresse_nom_de_la_voie, adresse_cp, adresse_ville, adresse_pays, telephone, mail, site_web, numero_siret, numero_siren, numero_tva, role, code_mail_validate, mail_validate, date_de_validite_paiement, created_at, updated_at)
 
            VALUES 
-           ('{$this->id}', '{$this->identifiant}', '{$this->password}','{$this->entreprise}', '{$this->type_de_societe}', '{$this->raison_sociale}', '{$this->adresse_numero}', '{$this->adresse_bis_ter}', '{$this->adresse_type_de_voie}','{$this->adresse_nom_de_la_voie}', '{$this->adresse_cp}', '{$this->adresse_ville}', '{$this->adresse_pays}', '{$this->telephone}', '{$this->mail}', '{$this->site_web}','{$this->numero_siret}', '{$this->numero_siren}', '{$this->numero_tva}', '{$this->role}', '{$this->date_de_validite_paiement}', '{$this->created_at}', '{$this->updated_at}')";
+           ('{$this->id}', '{$this->identifiant}', '{$this->password}','{$this->entreprise}', '{$this->type_de_societe}', '{$this->raison_sociale}', '{$this->adresse_numero}', '{$this->adresse_bis_ter}', '{$this->adresse_type_de_voie}','{$this->adresse_nom_de_la_voie}', '{$this->adresse_cp}', '{$this->adresse_ville}', '{$this->adresse_pays}', '{$this->telephone}', '{$this->mail}', '{$this->site_web}','{$this->numero_siret}', '{$this->numero_siren}', '{$this->numero_tva}', '{$this->role}', '{$this->code_mail_validate}', '{$this->mail_validate}', '{$this->date_de_validite_paiement}', '{$this->created_at}', '{$this->updated_at}')";
 
        $query = $pdo->prepare($sql);
        
@@ -92,6 +94,8 @@ class Utilisateur
        $query->bindValue($this->numero_siren, PDO::PARAM_INT);
        $query->bindValue($this->numero_tva, PDO::PARAM_STR);
        $query->bindValue($this->role, PDO::PARAM_STR);
+       $query->bindValue($this->code_mail_validate, PDO::PARAM_STR);
+       $query->bindValue($this->mail_validate, PDO::PARAM_INT);
        $query->bindValue($this->date_de_validite_paiement, PDO::PARAM_STR);
        $query->bindValue($this->created_at, PDO::PARAM_STR);
        $query->bindValue($this->updated_at, PDO::PARAM_STR);
@@ -114,33 +118,7 @@ class Utilisateur
       return false;
     }
 
-
-    public function generateToken()
-    {
-        // On crée une chaine introuvable
-        //$token = md5(time() . uniqid(true) . mt_rand(1, 1000));
-        // Plus secure ? => bin2hex(random_bytes(32));
-        $token = bin2hex(random_bytes(32));
-        // On le stocke en session
-        $_SESSION['token'] = $token;
-
-        return $token;
-    }
-
-
-    public static function cryptage($password)
-    {
-        $ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
-        $iv = openssl_random_pseudo_bytes($ivlen);
-        $ciphertext_raw = openssl_encrypt($password, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
-        $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
-        $ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
-
-        return $ciphertext;
-    }
-
-
-
+    
     /**
      * Get the value of id
      */ 
@@ -511,6 +489,42 @@ class Utilisateur
         return $this;
     }
 
+     /**
+     * Get the value of code_mail_validate
+     */
+    public function getCodeMailValidate()
+    {
+        return $this->code_mail_validate;
+    }
+
+    /**
+     * Set the value of code_mail_validate
+     */
+    public function setCodeMailValidate($code_mail_validate): self
+    {
+        $this->code_mail_validate = $code_mail_validate;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of mail_validate
+     */
+    public function getMailValidate()
+    {
+        return $this->mail_validate;
+    }
+
+    /**
+     * Set the value of mail_validate
+     */
+    public function setMailValidate($mail_validate): self
+    {
+        $this->mail_validate = $mail_validate;
+
+        return $this;
+    }
+
     /**
      * Get the value of date_de_validite_paiement
      */
@@ -564,4 +578,8 @@ class Utilisateur
 
         return $this;
     }
+
+    
+
+   
 }

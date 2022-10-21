@@ -357,6 +357,7 @@
 |`numero_siren`|INT(16)|UNSIGNED, DEFAULT NULL|--|
 |`numero_tva`|VARCHAR(32)|DEFAULT NULL|--|
 |`role`|ENUM(+)|NOT NULL|(+) admin, adminuser, user|
+|`mail_validate`|bool|NOT NULL||
 |`date_de_validite_paiement`|TIMESTAMP|NOT NULL|--|
 |`created_at`|TIMESTAMP|NOT NULL, DEFAULT CURRENT_TIMESTAMP|--|
 |`updated_at`|TIMESTAMP|NOT NULL|--|

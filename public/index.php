@@ -13,8 +13,6 @@ require_once '../vendor/autoload.php';
 require_once '../app/Controllers/MainController.php';
 
 
-
-
 // On démarre la session après l'autoload
 session_start();
 
@@ -52,7 +50,7 @@ if (array_key_exists('BASE_URI', $_SERVER)) {
 //      - ainsi pour la route /, méthode "home" du MainController => "main-home"
 
 
-
+//Ne sert pas pour le moment
 $router->map(
     'GET',
     '/api',
@@ -62,8 +60,6 @@ $router->map(
     ],
     'main-home'
 );
-
-
 
 
 // FOURNISSEUR ENDPOINT
@@ -1404,6 +1400,26 @@ $router->map(
 //UTILISATEUR ENDPOINT
 
 $router->map(
+    'GET',
+    '/api/utilisateur', //url ou endpoint 
+    [
+        'controller' => '\App\Controllers\UtilisateurController',
+        'method' => 'list',
+    ],
+    'utilisateur-list'
+);
+
+$router->map(
+    'GET',
+    '/api/utilisateur/[i:index]', //url ou endpoint 
+    [
+        'controller' => '\App\Controllers\UtilisateurController',
+        'method' => 'edit',
+    ],
+    'utilisateur-edit'
+);
+
+$router->map(
     'POST',
     '/api/utilisateur/new', //url ou endpoint 
     [
@@ -1411,6 +1427,36 @@ $router->map(
         'method' => 'newUtilisateur',
     ],
     'utilisateur-newUtilisateur'
+);
+
+$router->map(
+    'PUT',
+    '/api/utilisateur/modif/[i:index]', //url ou endpoint 
+    [
+        'controller' => '\App\Controllers\UtilisateurController',
+        'method' => 'modifUtilisateur',
+    ],
+    'utilisateur-modifUtilisateur'
+);
+
+$router->map(
+    'OPTIONS',
+    '/api/utilisateur/supp/[i:index]',
+    [
+        'controller' => '\App\Controllers\UtilisateurController', // On indique le FQCN de la classe
+        'method' => 'corsoption',
+    ],
+    'utilisateur-corsoption'
+);
+
+$router->map(
+    'DELETE',
+    '/api/utilisateur/supp/[i:index]', //url ou endpoint 
+    [
+        'controller' => '\App\Controllers\UtilisateurController',
+        'method' => 'suppUtilisateur',
+    ],
+    'utilisateur-suppUtilisateur'
 );
 
 $router->map(
@@ -1431,26 +1477,6 @@ $router->map(
         'method' => 'logout',
     ],
     'utilisateur-logout'
-);
-
-$router->map(
-    'GET',
-    '/api/utilisateur', //url ou endpoint 
-    [
-        'controller' => '\App\Controllers\UtilisateurController',
-        'method' => 'list',
-    ],
-    'utilisateur-list'
-);
-
-$router->map(
-    'GET',
-    '/api/utilisateur/[i:index]', //url ou endpoint 
-    [
-        'controller' => '\App\Controllers\UtilisateurController',
-        'method' => 'edit',
-    ],
-    'utilisateur-edit'
 );
 
 $router->map(

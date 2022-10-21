@@ -13,6 +13,7 @@ class CoreController
         CoreModel::cors();   
     }
 
+    
     public function __construct()
     {
         // On vérifie les ACL
@@ -23,9 +24,8 @@ class CoreController
     }
 
     
-    /**
-     * Vérification du token CSRF
-     */
+    
+    //Fonction de vérification du TOKEN
     protected function checkToken()
     {
         // Un formulaire a-t-il été soumis ?
@@ -50,9 +50,6 @@ class CoreController
             }
 
             // Sinon tout va bien
-            // On va tout de même supprimer le token en session (usage unique)
-            //unset($_SESSION['token']);
-
             // Le programme continue sa route...
         }
     }
