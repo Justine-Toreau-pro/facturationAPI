@@ -32,10 +32,9 @@ class SecurityController //extends CoreController
     }
 
 
-    //Fonction de décryptage
+    //Fonction de décryptaged
     public static function decryptage($password)
     {
-        
         $c = base64_decode($password);
         $ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
         $iv = substr($c, 0, $ivlen);
