@@ -239,7 +239,7 @@ class UtilisateurController //extends CoreController
         }
 
         SecurityController::generateToken();
-        $_SESSION['entreprise'] = $user->getEntreprise();
+        
         $_SESSION['identifiant'] = $user->getIdentifiant();
         $_SESSION['password'] = SecurityController::cryptage($data["password"]);
         

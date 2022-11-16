@@ -23,7 +23,7 @@ class Database2
     /**
      * Propriété statique (liée à la classe) stockant l'unique instance objet
      *
-     * @var Database
+     * @var Database2
      */
     private static $instance;
 
@@ -40,17 +40,19 @@ class Database2
         //$dbName = $_SESSION['entreprise'];
         $dbUserName = $_SESSION['identifiant'];
         $dbPassword = SecurityController::decryptage($_SESSION['password']);
-        
+        //var_dump($dbUserName);
+        //var_dump($_SESSION['password']);
+        //var_dump($dbPassword);
         try{    
             $this->dbh2 = new PDO(
-                "mysql:host={$dbHost};dbname={$_SESSION['entreprise']};charset=utf8",
+                "mysql:host={$dbHost};dbname={$_SESSION['identifiant']};charset=utf8",
                 $dbUserName,
                 $dbPassword,
                 array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING) // Affiche les erreurs SQL à l'écran
             );
 
             
-        //var_dump($dbName);
+        //var_dump($_SESSION);
         //var_dump($dbUserName);
         //var_dump($dbPassword);
         // ... mais si une erreur (Exception) survient, alors on attrape l'exception

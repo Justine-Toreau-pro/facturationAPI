@@ -22,6 +22,7 @@ class FournisseurController extends CoreController
 // FOURNISSEUR
     public function list()
     {
+        
         $fournisseurList = CoreModel::findAll("Fournisseur");
         print_r($fournisseurList);
     }

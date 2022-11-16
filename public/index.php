@@ -19,8 +19,8 @@ session_start();
 /* ------------
 --- ROUTAGE ---
 -------------*/
-
-
+//var_dump($_SESSION);
+//var_dump($dbPassword);
 // création de l'objet router
 // Cet objet va gérer les routes pour nous, et surtout il va
 $router = new AltoRouter();
@@ -71,6 +71,16 @@ $router->map(
             'method' => 'list',
         ],
         'fournisseur-list'
+    );
+
+    $router->map(
+        'OPTIONS',
+        '/api/fournisseur',
+        [
+            'controller' => '\App\Controllers\FournisseurController', // On indique le FQCN de la classe
+            'method' => 'corsoption',
+        ],
+        'fournisseur-getcorsoption'
     );
 
     $router->map(
