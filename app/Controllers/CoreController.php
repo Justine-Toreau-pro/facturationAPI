@@ -33,7 +33,7 @@ class CoreController
         {
 
             // On récupère le token (la valeur postée ou null)
-            $token = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
+            $token = $_SERVER['Authorization'] ?? null;
             //var_dump($token);
             // Idem avec le token en session
             $sessionToken = $_SESSION['token'] ?? null;

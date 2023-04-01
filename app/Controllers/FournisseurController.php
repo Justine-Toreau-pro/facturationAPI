@@ -16,15 +16,16 @@ use App\Controllers\CoreController;
 use App\Models\CoreModel;
 
 
-class FournisseurController extends CoreController
+class FournisseurController //extends CoreController
 {
 
 // FOURNISSEUR
     public function list()
     {
-        
+        var_dump($_SESSION);
         $fournisseurList = CoreModel::findAll("Fournisseur");
         print_r($fournisseurList);
+        
     }
 
 

@@ -43,6 +43,7 @@ class Database2
         //var_dump($dbUserName);
         //var_dump($_SESSION['password']);
         //var_dump($dbPassword);
+        var_dump($_SESSION);
         try{    
             $this->dbh2 = new PDO(
                 "mysql:host={$dbHost};dbname={$_SESSION['identifiant']};charset=utf8",

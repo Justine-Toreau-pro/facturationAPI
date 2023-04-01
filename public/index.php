@@ -1480,6 +1480,16 @@ $router->map(
 );
 
 $router->map(
+    'OPTIONS',
+    '/api/utilisateur/login', //url ou endpoint 
+    [
+        'controller' => '\App\Controllers\UtilisateurController',
+        'method' => 'corsoption',
+    ],
+    'utilisateur-utilisateurCorsoption'
+);
+
+$router->map(
     'POST',
     '/api/utilisateur/logout', //url ou endpoint 
     [
@@ -1487,6 +1497,16 @@ $router->map(
         'method' => 'logout',
     ],
     'utilisateur-logout'
+);
+
+$router->map(
+    'OPTIONS',
+    '/api/utilisateur/logout', //url ou endpoint 
+    [
+        'controller' => '\App\Controllers\UtilisateurController',
+        'method' => 'corsoption',
+    ],
+    'utilisateur-logoutCorsoption'
 );
 
 $router->map(

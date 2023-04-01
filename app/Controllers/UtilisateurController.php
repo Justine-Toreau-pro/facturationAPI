@@ -199,15 +199,37 @@ class UtilisateurController //extends CoreController
     }
 
 
-    public function corsoption()
+    public static function corsoption()
     {
-        CoreModel::cors();
+            // Allow from any origin
+    if (isset($_SERVER['HTTP_ORIGIN'])) {
+        // Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one
+        // you want to allow, and if so:
+        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Max-Age: 86400');    // cache for 1 day
+        header('Access-Control-Allow-Origin : *');
     }
+    
+    // Access-Control headers are received during OPTIONS requests
+    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+        
+        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+            // may also be using PUT, PATCH, HEAD etc
+            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE");
+        
+        if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+            header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+    
+        exit(0);
+    }
+}
 
 
     //Fonction de connexion
     public function connexionUtilisateur()
     {
+        UtilisateurController::corsoption();
         //on récupère les valeurs envoyées par le front
         $jsonData = file_get_contents("php://input");
         $data = json_decode($jsonData, true);
@@ -242,10 +264,21 @@ class UtilisateurController //extends CoreController
         
         $_SESSION['identifiant'] = $user->getIdentifiant();
         $_SESSION['password'] = SecurityController::cryptage($data["password"]);
+        $_SESSION['entreprise'] = $user->getEntreprise();
+        $_SESSION['adresse_numero'] = $user->getAdresseNumero();
+        $_SESSION['adresse_bis_ter'] = $user->getAdresseBisTer();
+        $_SESSION['adresse_type_de_voie'] = $user->getAdresseTypeDeVoie();
+        $_SESSION['adresse_nom_de_la_voie'] = $user->getAdresseNomDeLaVoie();
+        $_SESSION['adresse_cp'] = $user->getAdresseCp();
+        $_SESSION['adresse_ville'] = $user->getAdresseVille();
+        $_SESSION['telephone'] = $user->getTelephone();
+        $_SESSION['numero_siret'] = $user->getNumeroSiret();
+        $_SESSION['numero_tva'] = $user->getNumeroTva();
+        //var_dump($_SESSION);
         
-        var_dump($_SESSION);
-        
-        echo "conecté en tant que" . " " . $user->getEntreprise();
+        return print_r(json_encode($_SESSION)) ;
+        //$jsonResponse = json_encode($response);
+        //return $jsonResponse;
         // On redirige vers la home
         //header('Location: /');
         exit;
@@ -254,9 +287,12 @@ class UtilisateurController //extends CoreController
 
     public function logout()
     {
+        UtilisateurController::corsoption();
         session_destroy();
         // On redirige vers la home
         //header('Location: /');
-        exit;
+        //return print_r(json_encode($_SESSION)) ;
+        echo 'deconnecter';
     }
+
 }
